@@ -103,23 +103,6 @@ Results
 Details about the training process, results, and model performance can be found in the output directory.
 
 
-Deploy Credentials
--------
-
-#### Deploy Token
-
-```
-gitlab+deploy-token-1606
-```
-
-#### Password
-
-```
-_jcyxcn6VzZsZwU99ehT
-```
-
-
-
 License
 -------
 
