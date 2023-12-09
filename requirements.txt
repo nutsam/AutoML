@@ -1,0 +1,4 @@
+torch==2.0.1
+torchvision==0.15.2
+autogluon==0.8.2
+torchmetrics==0.9.3

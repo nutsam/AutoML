@@ -1,0 +1,19 @@
+variables:
+  MODEL_ZOO_IMAGE: $CI_REGISTRY_IMAGE/model_zoo:$CI_COMMIT_REF_SLUG
+  DOCKER_DRIVER: overlay
+
+services:
+  - docker:dind
+
+before_script:
+  - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+
+stages:
+  - build
+
+build:
+  stage: build
+  image: docker:latest
+  script:
+    - docker build -t $MODEL_ZOO_IMAGE .
+    - docker push $MODEL_ZOO_IMAGE

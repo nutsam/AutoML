@@ -1,0 +1,49 @@
+var:
+  # -- required --
+  task_type: &task_type "regression" # option: ["classification", "regression"]
+  label_type: &label_type "single" # option ["single", "multiple"]
+  model_name: &model_name "CAT" # option: ["GBM", "CAT", "XGB", "RF", "XT", "KNN", "LR"]
+  num_classes: &num_classes 1
+  feature_list: &feature_list ["Sex", "SibSp", "Parch", "Fare", "Embarked"]
+  categorical_features: &categorical_features ["Sex", "Parch", "Embarked"]
+  categorical_dimensions: &categorical_dimensions [2, 2, 3]
+  label_column: &label_column "Age" # should not in feature_list
+
+  # -- advanced --
+  weighted_ensemble: True
+  presets: best_quality # option: ["best_quality", "high_quality", "good_quality", "medium_quality"]
+
+exp:
+  exp_name: "exp01"
+  default_root_path: "./output"
+  default_root_dir: "reg_cat"
+
+dataset:
+  dataset_folder: /volume/open-dataset-nas/model_zoo/dataset
+  annotation_filename: annotation_train.csv
+  train:
+    selected_folds: [1, 2, 3, 4]
+  val:
+    selected_folds: [5]
+
+model:
+  model_name: *model_name
+  metrics:
+    monitors: rmse
+    evaluation:
+      - name: torchmetrics.MeanAbsoluteError
+        log_name: mae
+        args: {}
+      - name: torchmetrics.MeanSquaredError
+        log_name: mse
+        args: {}
+      - name: torchmetrics.MeanSquaredError
+        log_name: rmse
+        args:
+          squared: False
+      - name: torchmetrics.MeanAbsolutePercentageError
+        log_name: mape
+        args: {}
+      - name: torchmetrics.R2Score
+        log_name: r2
+        args: {}
