@@ -9,7 +9,16 @@ WORKDIR /app
 
 # Install some basic dependencies
 RUN apt-get update
-RUN apt-get install libgomp1
+RUN apt-get install -y --no-install-recommends tzdata locales zsh tmux tree htop zip unzip libgomp1
+
+# Install Oh My Zsh and configure plugins
+RUN yes | sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)" -y && \
+    git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions && \
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting && \
+    sed -i -E "s/(plugins=\(.+)\)/\1\ zsh-syntax-highlighting\)/" ~/.zshrc && \
+    sed -i -E "s/(plugins=\(.+)\)/\1\ zsh-autosuggestions\)/" ~/.zshrc && \
+    sed -i -E "s/%c/%~/" ~/.oh-my-zsh/themes/robbyrussell.zsh-theme && \
+    chsh -s /bin/zsh
 
 # Instatll requirements
 RUN pip install -U torch==${TORCH_VERSION} torchvision==${TORCHVISION_VERSION}
